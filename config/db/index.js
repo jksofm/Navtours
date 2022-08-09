@@ -9,7 +9,7 @@ dotenv.config();
 
 async function connect() {
     try {
-      await mongoose.connect((process.env.DATABASE), {
+      await mongoose.connect(`${process.env.DATABASE}`, {
         useNewUrlParser: true,
         // useCreateIndex: true,
         useUnifiedTopology: true,
