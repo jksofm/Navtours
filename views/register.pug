@@ -1,0 +1,21 @@
+extends base
+
+block content
+    main.main
+        .register-form
+            h2.heading-secondary.ma-bt-lg Sign Up
+            form.registerForm
+                .form__group
+                    label.form__label(for='emailRegister') Email address
+                    input#emailRegister.form__input(type='email', placeholder='you@example.com', required)
+                .form__group
+                    label.form__label(for='registerName') Name
+                    input#registerName.form__input(type='text', placeholder='Enter your name', required)
+                .form__group.ma-bt-md
+                    label.form__label(for='passwordRegister') Password
+                    input#passwordRegister.form__input(type='password', placeholder='••••••••', required)
+                .form__group.ma-bt-md
+                    label.form__label(for='confirmPassword') Confirm password
+                    input#confirmPassword.form__input(type='password', placeholder='••••••••', required)
+                .form__group
+                    button.btn.btn--green Register
