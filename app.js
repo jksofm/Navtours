@@ -1,5 +1,4 @@
 const express = require('express');
-const app = express();
 const morgan = require('morgan');
 const path = require('path');
 const tourRouter = require('./Routes/tourRoutes');
@@ -17,12 +16,22 @@ const cookieParser = require('cookie-parser');
 const bookingRouter = require('./Routes/bookingRoutes')
 var csp = require('express-csp');
 const compression = require('compression');
+const cors = require('cors');
 
 
+const app = express();
+
+app.enable('trust proxy');
 
 
 app.set("view engine","pug");
 app.set("views",path.join(__dirname, 'views'));
+app.use(cors());
+// app.use(cors({
+//   origin : "https://www.natours.com"
+// }))
+
+app.options('*',cors());
 
 //Static files
 // app.use(express.static(`${__dirname}/public`));
@@ -168,7 +177,6 @@ app.use('/api', limiter);
 // const userRouter = express.Router();
 app.use('/', viewRouter);
 
-app.enable('trust proxy');
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
