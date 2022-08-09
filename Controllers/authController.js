@@ -20,18 +20,17 @@ const signToken = (id) => {
   );
 };
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, statusCode,req, res) => {
   const token = signToken(user._id);
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COKKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
+    secure : req.secure || req.headers['x-forwarded-proto']=== 'https',
 
     httpOnly: true, // cookie cannot be modified or accessed by an actions
   };
-  if (process.env.NODE_ENV === 'production') {
-    cookieOptions.secure = true; ///Nếu không phải là https thì sẽ không có cookie
-  }
+  
   res.cookie('jwt', token, cookieOptions);
 
   user.password = undefined;
@@ -67,7 +66,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   //       user: newUser,
   //     },
   //   });
-  createSendToken(newUser, 201, res);
+  createSendToken(newUser, 201,req, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -98,7 +97,7 @@ exports.login = catchAsync(async (req, res, next) => {
   //     }
   //   });
 
-  createSendToken(user, 200, res);
+  createSendToken(user, 200,req, res);
 });
 exports.logout = (req, res) => {
   res.cookie('jwt', 'logout', {
@@ -270,7 +269,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   //         user
   //     }
   //   });
-  createSendToken(user, 200, res);
+  createSendToken(user, 200,req, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -300,5 +299,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   //     }
 
   //   });
-  createSendToken(user, 201, res);
+  createSendToken(user, 201,req, res);
 });

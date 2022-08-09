@@ -168,7 +168,7 @@ app.use('/api', limiter);
 // const userRouter = express.Router();
 app.use('/', viewRouter);
 
-
+app.enable('trust proxy');
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
