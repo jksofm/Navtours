@@ -24,7 +24,7 @@ if(loginForm){
 const logoutBtn = document.querySelector(".logoutButton");
 if(logoutBtn){
     logoutBtn.addEventListener("click",function(e){
-        console.log("logout")
+        // console.log("logout")
        e.preventDefault();
         logout();
     })
@@ -34,12 +34,12 @@ const registerForm = document.querySelector(".registerForm")
 if(registerForm){
     document.querySelector(".registerForm").addEventListener("submit",function(e){
         e.preventDefault();
-        console.log("hellolooo");
+        // console.log("hellolooo");
         const email = document.getElementById("emailRegister").value;
         const password = document.getElementById("passwordRegister").value;
         const name = document.getElementById("registerName").value;
         const passwordConfirm = document.getElementById("confirmPassword").value;
-        console.log(email,password,name,passwordConfirm);
+        // console.log(email,password,name,passwordConfirm);
         register(email,name,password,passwordConfirm);
     })
 }
@@ -55,7 +55,7 @@ if(updateForm){
         form.append("name",document.getElementById("nameUpdate").value)
         form.append("email",document.getElementById("emailUpdate").value)
         form.append("photo",document.getElementById("photoUpdate").files[0])
-       console.log("hello",form);
+    //    console.log("hello",form);
         // const email = document.getElementById("emailUpdate").value;
         // const name = document.getElementById("nameUpdate").value;
         updateSettings(form,"data");
@@ -97,7 +97,7 @@ if(commentForm){
         const review = document.getElementById('commentInput').value;
         const rating = document.getElementById('ratingInput').value;
         const tourID = commentBtn.dataset.tourid;
-        console.log(tourID);
+        // console.log(tourID);
         commentTour(rating,review,tourID);
     })
 }

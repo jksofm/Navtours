@@ -4,7 +4,7 @@ const AppError = require('../../utils/appError');
 
 export const commentTour = async (rating,review,tourId) =>{
     try{
-        const reviewComment = await axios.post(`http://localhost:3000/api/v1/tours/${tourId}/reviews`,{
+        const reviewComment = await axios.post(`/api/v1/tours/${tourId}/reviews`,{
             rating ,
             review
         });
@@ -19,7 +19,7 @@ export const commentTour = async (rating,review,tourId) =>{
 }
 export const deleteComment = async(reviewId)=>{
     try{
-        const reviewComment = await axios.delete(`http://localhost:3000/api/v1/reviews/${reviewId}`);
+        const reviewComment = await axios.delete(`/api/v1/reviews/${reviewId}`);
         showAlert("success","Successfully!");
         location.reload(true);
 

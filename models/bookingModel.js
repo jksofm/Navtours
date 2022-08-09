@@ -40,7 +40,7 @@ bookingSchema.pre('save', async function(next) {
     const tour = await Tour.findById(this.tour);
     // const startDate = tour.startDates.id(this.dateChoose);
     dayChooseObj = tour.startDates.filter(date => date._id === this.dateChoose);
-     console.log("dayChooseObj: " , dayChooseObj)
+    //  console.log("dayChooseObj: " , dayChooseObj)
     // If there is a maximum number of participants, throw an error.
     if (dayChooseObj.participants >= dayChooseObj.maxParticipants)
       return next(new AppError('Sorry, but this tour has a maximum number of participants already. Please book another date.'));

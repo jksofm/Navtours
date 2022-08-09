@@ -79,7 +79,7 @@ exports.login = catchAsync(async (req, res, next) => {
 
   //check user exits && check password
   const user = await User.findOne({ email: email }).select('+password'); // Dựa vào email đi lấy về dữ liệu và lấy ra dữ liêu passwprd bị ẩn
-  console.log(user);
+ 
   if (!user) {
     return next(new AppError('Incorect email or password'), 404);
   }
@@ -131,7 +131,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   //2) Validate token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  console.log(decoded);
+ 
   //Sử dụng prosimify của util để tạo ra một promise
 
   //3) chec if user still exists when someone have your token
@@ -162,7 +162,7 @@ exports.isLogin = async (req, res, next) => {
         req.cookies.jwt,
         process.env.JWT_SECRET
       );
-      console.log(decoded);
+    
       //Sử dụng prosimify của util để tạo ra một promise
 
       //3) chec if user still exists when someone have your token
@@ -212,7 +212,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   //2) Generate the random token
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
-  console.log(user);
+ 
 
   //3) Send it to user's email
 
@@ -228,7 +228,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       message: 'Token sent to email',
     });
   } catch (e) {
-    console.log(e);
+  
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save({ validateBeforeSave: false });
@@ -275,7 +275,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
   ///1)Get user from collection
-  console.log(req.user);
+ 
   const user = await User.findById(req.user.id).select('+password');
 
   //2)Checkiff current password is correct

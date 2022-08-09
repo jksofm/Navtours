@@ -16,6 +16,8 @@ const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const bookingRouter = require('./Routes/bookingRoutes')
 var csp = require('express-csp');
+const compression = require('compression');
+
 
 
 
@@ -101,6 +103,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //   },
 // });
 
+app.use(compression());
 
 /// Development logging
 if (process.env.NODE_ENV === 'development') {

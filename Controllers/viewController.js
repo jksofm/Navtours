@@ -28,7 +28,7 @@ exports.getDetailTour = catchAsync(async (req, res, next) => {
     return next(new AppError('There is no tour with that name.', 404));
   }
   const booking = await Booking.find({ user: req.user.id, tour: tour.id });
-  console.log("This is booking",booking);
+  // console.log("This is booking",booking);
   if(booking){ 
     return res.status(200).render('tour', {
       title: tour.name,
