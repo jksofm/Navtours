@@ -77,7 +77,8 @@ exports.createBookingCheckout = catchAsync(async(req,res,next)=>{
 
     const {tour,user,price,startDateId} = req.query;
     if(!tour && !user && !price && !startDateId) return next();
-    const bookingExist = await Booking.find({user:user,tour:tour,dateChoose:startDateId});
+    const bookingExist = await Booking.findOne({user,tour,dateChoose:startDateId});
+     console.log(bookingExist);
     if(bookingExist){
      
       return next(new AppError("You have already booked this tour ! Please choose another day or another tour !",400))

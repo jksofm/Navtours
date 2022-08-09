@@ -102,14 +102,17 @@ if(commentForm){
     })
 }
 //delete comment
-const btnDeleteComment = document.getElementById('deleteComment');
-if(btnDeleteComment){
-    btnDeleteComment.addEventListener("click",e=>{
-        const reviewId = e.target.dataset.reviewid;
-
-        deleteComment(reviewId);
-    })
-}
+const btnDeleteComment = document.querySelectorAll('.deleteComment');
+btnDeleteComment.forEach((eachBtn)=>{
+     
+    if(eachBtn){
+        eachBtn.addEventListener("click",e=>{
+            const reviewId = e.target.dataset.reviewid;
+            deleteComment(reviewId);
+            
+        })
+    }
+})
 
 
 
