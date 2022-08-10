@@ -132,7 +132,7 @@ exports.checkifBooked = async(req,res,next)=>{
    const bookingExist = await Booking.findOne({user,tour,dateChoose:startDateId});
    if(bookingExist){
     req.query.alert = "checkifbooking"
-    location.reload(true);
+   
     return next(new AppError("You have already booked this tour ! Please choose another day or another tour !",400))
    }else{
 

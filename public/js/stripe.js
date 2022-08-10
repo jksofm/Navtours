@@ -30,7 +30,12 @@ export const bookTour = async (tourId,startDateId) =>{
            })
     }catch(e){
       console.log(e);
-      showAlert("danger","Something went wrong!Please try again");
+      if(req.query.alert="checkifbooking"){
+        showAlert("error","You have already booked this tour ! Please choose another tour or another day!")
+      }else{
+
+          showAlert("error","Something went wrong!Please try again");
+      }
     }
    
 
