@@ -134,10 +134,12 @@ exports.checkifBooked = async(req,res,next)=>{
     req.query.alert = "checkifbooking"
     location.reload(true);
     return next(new AppError("You have already booked this tour ! Please choose another day or another tour !",400))
-   };
+   }else{
+
+     return next();
+   }
    
   
-    return next();
   
 
 }
