@@ -7,6 +7,7 @@ const router = express.Router({ mergeParams: true });
 router.use(authController.protect);
 router.get(
   '/checkout-session/:tourID/:priceId/:startDateId',
+  bookingController.checkifBooked,
   bookingController.getCheckoutSession
 );
 

@@ -103,13 +103,7 @@ const createBookingCheckout = async (session)=>{
   const price = session.amount_total/100;
   const startDateId = session.metadata.dateChoose
 
-  const bookingExist = await Booking.findOne({user,tour,dateChoose:startDateId});
-     console.log(bookingExist);
-    if(bookingExist){
-     
-      return next(new AppError("You have already booked this tour ! Please choose another day or another tour !",400))
-      
-    }
+ 
 
   await Booking.create({tour,user,price,dateChoose: startDateId});
           
@@ -128,6 +122,19 @@ exports.webhookCheckout = (req,res)=>{
     createBookingCheckout(event.data.object);
     
     res.status(200).json({received : true})
+
+}
+exports.checkifBooked = async(req,res,next)=>{
+  try {
+    const user = req.user.id;
+    const tour = req.params.tourID;
+    const startDateId = req.params.startDateId;
+   const bookingExist = await Booking.findOne({user,tour,dateChoose:startDateId});
+   if(bookingExist) req.query.alert = "checkifbooking";
+   return next(new AppError("You have already booked this tour ! Please choose another day or another tour !",400))
+  }catch(err){
+    return next();
+  }
 
 }
 

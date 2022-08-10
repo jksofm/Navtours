@@ -11,6 +11,9 @@ exports.alerts = (req,res,next)=>{
    if(alert==="booking"){
     res.locals.alert = "Your booking was successfully! Please check your email for a confirmation. If your booking doesn't show up here immidiately, please come back later."
    }
+   if(alert==="checkifbooking"){
+    res.locals.alert = "You have already booked this tour! Please choose another one or another day."
+   }
    next();
 }
 exports.getOverview = catchAsync(async (req, res) => {
