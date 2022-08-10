@@ -30,9 +30,9 @@ export const bookTour = async (tourId,startDateId) =>{
            })
     }catch(e){
       
+        showAlert("error","Sorry!Something went wrong or you may have already booked this tour, please choose another tour or another day! Try again,please!",7);
           location.reload(true);
 
-          showAlert("error","Sorry!Something went wrong or you may have already booked this tour, please choose another tour or another day! Try again,please!");
       
     }
    
