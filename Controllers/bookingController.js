@@ -125,16 +125,20 @@ exports.webhookCheckout = (req,res)=>{
 
 }
 exports.checkifBooked = async(req,res,next)=>{
-  try {
+  
     const user = req.user.id;
     const tour = req.params.tourID;
     const startDateId = req.params.startDateId;
    const bookingExist = await Booking.findOne({user,tour,dateChoose:startDateId});
-   if(bookingExist) req.query.alert = "checkifbooking";
-   return next(new AppError("You have already booked this tour ! Please choose another day or another tour !",400))
-  }catch(err){
+   if(bookingExist){
+    req.query.alert = "checkifbooking"
+    location.reload(true);
+    return next(new AppError("You have already booked this tour ! Please choose another day or another tour !",400))
+   };
+   
+  
     return next();
-  }
+  
 
 }
 
