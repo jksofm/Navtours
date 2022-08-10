@@ -65,7 +65,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     mode: 'subscription',
     currency: 'usd',
     // success_url: `${YOUR_DOMAIN}/?tour=${req.params.tourID}&user=${req.user.id}&price=${tour.price}&startDateId=${req.params.startDateId}`,
-    success_url: `${req.protocol}://${req.get('host')}/mytour`,
+    success_url: `${req.protocol}://${req.get('host')}/mytour?alert=booking`,
     cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
     customer_email: req.user.email,
     client_reference_id: req.params.tourID,

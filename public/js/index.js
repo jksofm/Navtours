@@ -4,6 +4,7 @@ import {register} from "./register"
 import {updateSettings} from "./updateSettings"
 import {bookTour} from "./stripe"
 import {commentTour,deleteComment} from "./comment"
+import {showAlert} from './alerts'
 
 
 
@@ -113,6 +114,12 @@ btnDeleteComment.forEach((eachBtn)=>{
         })
     }
 })
+
+/// 
+const alertMessage = document.querySelector('body').dataset.alert;
+if(alertMessage){
+    showAlert('success',alertMessage,7)
+}
 
 
 
