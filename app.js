@@ -14,6 +14,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const bookingRouter = require('./Routes/bookingRoutes')
+const bookingController = require('./Controllers/bookingController')
 var csp = require('express-csp');
 const compression = require('compression');
 const cors = require('cors');
@@ -118,18 +119,7 @@ app.use(compression());
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
-//Body parser data
-app.use(
-  express.json({
-    limit: '10kb',
-  })
-);
-//POST method
-app.use(express.urlencoded({
-    extended: true,
-    limit : "10kb"
-}))/// xử lí hành vi của form
-app.use(cookieParser());
+
 //Data saniitization against NoSQL query injection
 // app.use(mongoSanitize());
 
@@ -158,6 +148,23 @@ const limiter = rateLimit({
   message: 'Too many request from this IP,please try again in an hour!',
 });
 app.use('/api', limiter);
+
+
+app.post('/webhook-checkout',express.raw({type: 'application/json'}),bookingController.webhookCheckout);
+
+
+//Body parser data
+app.use(
+  express.json({
+    limit: '10kb',
+  })
+);
+//POST method
+app.use(express.urlencoded({
+    extended: true,
+    limit : "10kb"
+}))/// xử lí hành vi của form
+app.use(cookieParser());
 
 // app.use((req, res, next) => {
 //   console.log(req.cookies);

@@ -1,9 +1,12 @@
 const Tour = require('./../models/tourModel');
+const User = require('./../models/userModel');
+
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
-const Booking = require("../models/bookingModel")
+const Booking = require("../models/bookingModel");
+const { EventEmitter } = require('nodemailer/lib/xoauth2');
 
 exports.createProduct = catchAsync(async (req, res, next) => {
   const tour = await Tour.findById(req.params.tourID);
@@ -11,7 +14,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
   const product = await stripe.products.create({
     name: `${tour.name} Tour`,
     images: [
-      'https://i.pinimg.com/564x/d6/b9/ad/d6b9ad9719e6582c5924cfa23faca768.jpg',
+      `${req.protocol}://${req.get('host')}/img/tours/${tour.imageCover}`,
     ],
     description: tour.summary,
   });
@@ -55,15 +58,20 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
         price: req.params.priceId,
 
         quantity: 1,
+       
+
       },
     ],
     mode: 'subscription',
     currency: 'usd',
-    success_url: `${YOUR_DOMAIN}/?tour=${req.params.tourID}&user=${req.user.id}&price=${tour.price}&startDateId=${req.params.startDateId}`,
-    cancel_url: `${YOUR_DOMAIN}/tour/${tour.slug}`,
+    // success_url: `${YOUR_DOMAIN}/?tour=${req.params.tourID}&user=${req.user.id}&price=${tour.price}&startDateId=${req.params.startDateId}`,
+    success_url: `${req.protocol}://${req.get('host')}/mytour`,
+    cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
     customer_email: req.user.email,
     client_reference_id: req.params.tourID,
     payment_method_types: ['card'],
+    // consent : req.params.startDateId
+    metadata : {dateChoose : req.params.startDateId}
   });
 
   //Create session as response
@@ -73,21 +81,46 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createBookingCheckout = catchAsync(async(req,res,next)=>{
+// exports.createBookingCheckout = catchAsync(async(req,res,next)=>{
 
-    const {tour,user,price,startDateId} = req.query;
-    if(!tour && !user && !price && !startDateId) return next();
-    const bookingExist = await Booking.findOne({user,tour,dateChoose:startDateId});
-     console.log(bookingExist);
-    if(bookingExist){
+//     const {tour,user,price,startDateId} = req.query;
+//     if(!tour && !user && !price && !startDateId) return next();
+//     const bookingExist = await Booking.findOne({user,tour,dateChoose:startDateId});
+//      console.log(bookingExist);
+//     if(bookingExist){
      
-      return next(new AppError("You have already booked this tour ! Please choose another day or another tour !",400))
+//       return next(new AppError("You have already booked this tour ! Please choose another day or another tour !",400))
       
-    }
-     await Booking.create({tour,user,price,dateChoose: startDateId});
+//     }
+//      await Booking.create({tour,user,price,dateChoose: startDateId});
 
-     res.redirect(req.originalUrl.split('?')[0]);
-})
+//      res.redirect(req.originalUrl.split('?')[0]);
+// })
+const createBookingCheckout = async (session)=>{
+  console.log("session: ",session);
+  const tour = session.client_reference_id;
+  const user = (await User.findOne({email : session.customer_email})).id;
+  const price = session.amount_total/100;
+  const startDateId = session.metadata.dateChoose
+
+  await Booking.create({tour,user,price,dateChoose: startDateId});
+          
+}
+exports.webhookCheckout = (req,res,next)=>{
+  const signature = request.headers['stripe-signature'];
+        let event;
+    try{
+
+      event = stripe.webhooks.constructEvent(req.body,signature,process.env.STRIPE_WEBHOOK_SECRET);
+    }catch(err){
+        return res.status(400).send(`Webhook error : ${err.message}`)
+    }
+    if(event.type === "checkout.session.completed"){
+                  createBookingCheckout(event.data.object)
+    }
+    res.status(200).json({received : true})
+
+}
 
 exports.createBooking = factory.createOne(Booking)
 
