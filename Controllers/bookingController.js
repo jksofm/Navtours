@@ -114,18 +114,19 @@ const createBookingCheckout = async (session)=>{
   await Booking.create({tour,user,price,dateChoose: startDateId});
           
 }
-exports.webhookCheckout = (req,res,next)=>{
-  const signature = request.headers['stripe-signature'];
-        let event;
+exports.webhookCheckout = (req,res)=>{
+  const signature = req.headers['stripe-signature'];
+        let event = req.body;
     try{
 
       event = stripe.webhooks.constructEvent(req.body,signature,process.env.STRIPE_WEBHOOK_SECRET);
     }catch(err){
-        return res.status(400).send(`Webhook error : ${err.message}`)
+      console.log(`⚠️  Webhook signature verification failed.`, err.message);
+      return response.sendStatus(400);
     }
-    if(event.type === "checkout.session.completed"){
-                  createBookingCheckout(event.data.object)
-    }
+  
+    createBookingCheckout(event.data.object);
+    
     res.status(200).json({received : true})
 
 }
