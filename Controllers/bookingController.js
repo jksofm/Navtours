@@ -103,6 +103,14 @@ const createBookingCheckout = async (session)=>{
   const price = session.amount_total/100;
   const startDateId = session.metadata.dateChoose
 
+  const bookingExist = await Booking.findOne({user,tour,dateChoose:startDateId});
+     console.log(bookingExist);
+    if(bookingExist){
+     
+      return next(new AppError("You have already booked this tour ! Please choose another day or another tour !",400))
+      
+    }
+
   await Booking.create({tour,user,price,dateChoose: startDateId});
           
 }
